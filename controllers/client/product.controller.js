@@ -1,5 +1,7 @@
 const Product = require("../../models/product.model")
+const ProductCategory = require("../../models/product-category.model");
 
+//[GET] /product
 module.exports.index = async(req, res) => {
     // console.log(req.query.category);
     
@@ -27,4 +29,26 @@ module.exports.index = async(req, res) => {
         products: products,
         keyword: keyword
     });
+};
+
+//[GET] /product/slug
+module.exports.detail = async(req, res) => {
+    // console.log(req.query.category);
+    try {
+        const find = {
+            deleted : false,
+            slug : req.params.slug,
+            status: "active"
+        }
+
+        const product = await Product.findOne(find);
+        console.log(product);
+
+        res.render("client/pages/product/detail", {
+            pageTitle: product.title,
+            products: product,
+        }); 
+    } catch(error){
+        res.redirect(`/products`);
+    }
 };
